@@ -1,0 +1,47 @@
+---
+title: "Individual growth modelling"
+author: "Sylvain Schmitt"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  bookdown::html_document2:
+    number_sections: false  
+    toc: false
+    toc_float: true
+linestretch: 1.5
+---
+
+```{r setup, include=FALSE}
+set.seed(42)
+library(knitr)
+library(vroom)
+opts_chunk$set(
+  echo = F, message = F, warning = F, 
+  fig.height = 6, fig.width = 8,
+  cache = F, cache.lazy = F)
+```
+
+```{r snakemake, include=FALSE}
+rhat <- snakemake@input[["rhat"]]
+trace <- snakemake@input[["trace"]]
+trace <- normalizePath(trace)
+pairs <- snakemake@input[["pairs"]]
+pairs <- normalizePath(pairs)
+posteriors <- snakemake@input[["posteriors"]]
+posteriors <- normalizePath(posteriors)
+```
+
+```{r rhat}
+kable(vroom(rhat), caption = "Caption.")
+```
+
+```{r trace, fig.cap="Caption."}
+include_graphics(trace, rel_path=F)
+```
+
+```{r pairs, fig.cap="Caption."}
+include_graphics(pairs, rel_path=F)
+```
+
+```{r posteriors, fig.cap="Caption."}
+include_graphics(posteriors, rel_path=F)
+```

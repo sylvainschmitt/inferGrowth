@@ -1,0 +1,155 @@
+inferGrowth - Individual growth modelling
+================
+Sylvain Schmitt
+February 21, 2023
+
+- <a href="#installation" id="toc-installation">Installation</a>
+- <a href="#usage" id="toc-usage">Usage</a>
+  - <a href="#locally" id="toc-locally">Locally</a>
+  - <a href="#hpc" id="toc-hpc">HPC</a>
+- <a href="#image" id="toc-image">Image</a>
+- <a href="#workflow" id="toc-workflow">Workflow</a>
+  - <a href="#prepare" id="toc-prepare">Prepare</a>
+  - <a href="#run" id="toc-run">Run</a>
+  - <a href="#post" id="toc-post">Post</a>
+
+[`singularity` &
+`snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
+workflow to infer growth from Guyafor data.
+
+![Workflow.](dag/dag.svg)
+
+# Installation
+
+- [x] Python ≥3.5
+- [x] Snakemake ≥5.24.1
+- [x] Golang ≥1.15.2
+- [x] Singularity ≥3.7.3
+- [x] This workflow
+
+``` bash
+# Python
+sudo apt-get install python3.5
+# Snakemake
+sudo apt install snakemake`
+# Golang
+export VERSION=1.15.8 OS=linux ARCH=amd64  # change this as you need
+wget -O /tmp/go${VERSION}.${OS}-${ARCH}.tar.gz https://dl.google.com/go/go${VERSION}.${OS}-${ARCH}.tar.gz && \
+sudo tar -C /usr/local -xzf /tmp/go${VERSION}.${OS}-${ARCH}.tar.gz
+echo 'export GOPATH=${HOME}/go' >> ~/.bashrc && \
+echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc && \
+source ~/.bashrc
+# Singularity
+mkdir -p ${GOPATH}/src/github.com/sylabs && \
+  cd ${GOPATH}/src/github.com/sylabs && \
+  git clone https://github.com/sylabs/singularity.git && \
+  cd singularity
+git checkout v3.7.3
+cd ${GOPATH}/src/github.com/sylabs/singularity && \
+  ./mconfig && \
+  cd ./builddir && \
+  make && \
+  sudo make install
+# detect Mutations
+git clone git@github.com:sylvainschmitt/inferGrowth.git
+cd inferGrowth.git
+```
+
+# Usage
+
+## Locally
+
+``` bash
+snakemake -s Prepare -np
+snakemake -s Prepare -j 4
+snakemake -np -j 3 --resources mem_mb=10000 # dry run
+snakemake --dag | dot -Tsvg > dag/dag.svg # dag
+snakemake --use-singularity -j 3 --resources mem_mb=10000 # run
+```
+
+## HPC
+
+``` bash
+module load bioinfo/snakemake-5.25.0 # for test on node
+snakemake -np # dry run
+sbatch job.sh # run
+snakemake --dag | dot -Tsvg > dag/dag.svg # dag
+```
+
+# Image
+
+**Work in progress.**
+
+# Workflow
+
+## Prepare
+
+*Prepare inference.*
+
+### [filter_trees](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/rules/filter_trees.smk)
+
+- Script:
+  [`filter_trees.R`](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/scripts/filter_trees.R)
+
+### [prep_mdata](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/rules/prep_mdata.smk)
+
+- Script:
+  [`prep_mdata.R`](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/scripts/prep_mdata.R)
+
+### [report_prep](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/rules/report_prep.smk)
+
+- Script:
+  [`report_prep.R`](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/scripts/report_prep.R)
+
+## Run
+
+*Run inference.*
+
+### [sample](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/rules/sample.smk)
+
+- Script:
+  [`sample.R`](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/scripts/sample.R)
+
+### [prep_chains](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/rules/prep_chains.smk)
+
+- Script:
+  [`prep_chains.R`](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/scripts/prep_chains.R)
+
+### [extract_pars](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/rules/extract_pars.smk)
+
+- Script:
+  [`extract_pars.R`](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/scripts/extract_pars.R)
+
+### [prep_draws](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/rules/prep_draws.smk)
+
+- Script:
+  [`prep_draws.R`](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/scripts/prep_draws.R)
+
+## Post
+
+*Inference post-analyses.*
+
+### [rhat](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/rules/rhat.smk)
+
+- Script:
+  [`rhat.R`](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/scripts/rhat.R)
+
+### [trace](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/rules/trace.smk)
+
+- Script:
+  [`trace.R`](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/scripts/trace.R)
+
+### [pairs](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/rules/pairs.smk)
+
+- Script:
+  [`pairs.R`](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/scripts/pairs.R)
+
+### [posteriors](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/rules/posteriors.smk)
+
+- Script:
+  [`posteriors.R`](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/scripts/posteriors.R)
+
+### [report](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/rules/report.smk)
+
+- Script:
+  [`report.R`](https://github.com/sylvainschmitt/inferGrowth/blob/hetre/scripts/report.R)

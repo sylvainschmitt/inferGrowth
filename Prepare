@@ -1,0 +1,12 @@
+configfile: "config/config_test.yml"
+
+rule all:
+   input:
+        "results/report/report_prep.html"
+
+# Rules #
+
+## prepare
+include: "rules/filter_trees.smk"
+include: "rules/prep_mdata.smk"
+include: "rules/report_prep.smk"
