@@ -7,7 +7,8 @@ rule prep_mdata:
         "results/logs/prep_mdata.log"
     benchmark:
         "results/benchmarks/prep_mdata.benchmark.txt"
-    # singularity: "../singularity/rbayesian.sif"
+    singularity: 
+        "https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif"
     threads: 1
     resources:
         mem_mb=1000

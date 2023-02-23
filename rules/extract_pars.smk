@@ -7,6 +7,8 @@ rule extract_pars:
         "results/logs/extract_pars.log"
     benchmark:
         "results/benchmarks/extract_pars.benchmark.txt"
+    singularity: 
+        "https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif"
     params:
         pars=config["pars"]
     threads: 1

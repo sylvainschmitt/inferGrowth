@@ -7,6 +7,8 @@ rule prep_chains:
         "results/logs/prep_chains.log"
     benchmark:
         "results/benchmarks/prep_chains.benchmark.txt"
+    singularity: 
+        "docker://ghcr.io/jbris/stan-cmdstanr-docker:latest"
     threads: 1
     resources:
         mem_mb=1000

@@ -7,6 +7,8 @@ rule rhat:
         "results/logs/rhat.log"
     benchmark:
         "results/benchmarks/rhat.benchmark.txt"
+    singularity: 
+        "docker://ghcr.io/jbris/stan-cmdstanr-docker:latest"
     threads: 1
     resources:
         mem_mb=1000

@@ -8,7 +8,6 @@ rule report_prep:
         "results/logs/report_prep.log"
     benchmark:
         "results/benchmarks/report_prep.benchmark.txt"
-    # singularity: "../singularity/rbayesian.sif"
     threads: 1
     resources:
         mem_mb=1000

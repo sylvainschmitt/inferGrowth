@@ -7,7 +7,7 @@ February 21, 2023
 - <a href="#usage" id="toc-usage">Usage</a>
   - <a href="#locally" id="toc-locally">Locally</a>
   - <a href="#hpc" id="toc-hpc">HPC</a>
-- <a href="#image" id="toc-image">Image</a>
+- <a href="#images" id="toc-images">Images</a>
 - <a href="#workflow" id="toc-workflow">Workflow</a>
   - <a href="#prepare" id="toc-prepare">Prepare</a>
   - <a href="#run" id="toc-run">Run</a>
@@ -76,9 +76,23 @@ sbatch job.sh # run
 snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 ```
 
-# Image
+# Images
 
-**Work in progress.**
+- **singularity-r-bioinfo**:
+  - url: <https://github.com/sylvainschmitt/singularity-r-bioinfo>
+  - adress:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>
+  - rules: filter_trees, prep_mdata, extract_pars, prep_draws
+  - packages used: tidyverse, vroom
+- **singularity-r-bioinfo**:
+  - url: <https://github.com/JBris/stan-cmdstanr-docker>
+  - adress: docker://ghcr.io/jbris/stan-cmdstanr-docker:latest
+  - rules: prep_chains, rhat
+  - packages used: tidyverse, vroom, cmdstanr, posterior
+- **lacking**:
+  - singularity-r-bioinfo?
+  - rules: report_prep, report, pairs, trace
+  - packages used: knitr, rmarkdown, viridis, bayesplot, GGally
 
 # Workflow
 

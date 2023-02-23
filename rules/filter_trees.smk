@@ -7,6 +7,8 @@ rule filter_trees:
         "results/logs/filter_trees.log"
     benchmark:
         "results/benchmarks/filter_trees.benchmark.txt"
+    singularity: 
+        "https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif"
     params:
         n_census=config["n_census"],
         n_ind_species=config["n_ind_species"],

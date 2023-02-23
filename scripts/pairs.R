@@ -20,6 +20,7 @@ library(tidyverse)
 library(vroom)
 library(viridis)
 library(bayesplot)
+library(GGally)
 
 # code
 theme_set(bayesplot::theme_default())
@@ -39,6 +40,6 @@ g <- t %>%
   select(chainiteration, parameter, value) %>% 
   spread(parameter, value) %>% 
   select(-chainiteration) %>% 
-  GGally::ggpairs()
+  ggpairs()
 ggsave(g, file = out, dpi = dpi, width = width, height = height)
   
